@@ -354,6 +354,7 @@ namespace BugNET.Administration.Projects.UserControls
             { RoleManager.DeletePermission(roleId, (int)Common.Permission.ReopenIssue); }
 
             if (chkCloseIssue.Checked) RoleManager.AddPermission(roleId, (int)Common.Permission.CloseIssue); else RoleManager.DeletePermission(roleId, (int)Common.Permission.CloseIssue);
+            if (chkViewPrivateComment.Checked) RoleManager.AddPermission(roleId, (int)Common.Permission.ViewPrivateComment); else RoleManager.DeletePermission(roleId, (int)Common.Permission.ViewPrivateComment);
 
             if (chkDeleteTimeEntry.Checked)
             { RoleManager.AddPermission(roleId, (int)Common.Permission.DeleteTimeEntry); }
@@ -397,6 +398,7 @@ namespace BugNET.Administration.Projects.UserControls
             chkDeleteProject.Checked = false;
             chkCloneProject.Checked = false;
             chkCreateProject.Checked = false;
+            chkViewPrivateComment.Checked = false;
 
             var permissions = RoleManager.GetPermissionsById(RoleId);
 
@@ -498,6 +500,9 @@ namespace BugNET.Administration.Projects.UserControls
                         break;
                     case Common.Permission.EditQuery:
                         chkEditQuery.Checked = true;
+                        break;
+                    case Common.Permission.ViewPrivateComment:
+                        chkViewPrivateComment.Checked = true;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
