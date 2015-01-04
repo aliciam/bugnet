@@ -80,7 +80,8 @@ namespace BugNET.Common
                 (int)Permission.SubscribeIssue,
                 (int)Permission.EditIssue,
                 (int)Permission.AssignIssue,
-                (int)Permission.ChangeIssueStatus
+                (int)Permission.ChangeIssueStatus,
+                (int)Permission.ViewPrivateComment
             };
 
         /// <summary>
@@ -102,7 +103,8 @@ namespace BugNET.Common
                 (int)Permission.AssignIssue,
                 (int)Permission.CloseIssue,
                 (int)Permission.DeleteIssue,
-                (int)Permission.ChangeIssueStatus
+                (int)Permission.ChangeIssueStatus,
+                (int)Permission.ViewPrivateComment
             };
 
         /// <summary>
@@ -137,7 +139,8 @@ namespace BugNET.Common
                 (int)Permission.CloseIssue,
                 (int)Permission.AdminEditProject,
                 (int)Permission.ChangeIssueStatus,
-                (int)Permission.ReopenIssue
+                (int)Permission.ReopenIssue,
+                (int)Permission.ViewPrivateComment
             };
 
         #endregion

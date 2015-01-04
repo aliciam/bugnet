@@ -1422,6 +1422,7 @@
     <Content Include="Providers\DataProviders\SqlDataProvider\1.6.327.0.SqlDataProvider.sql" />
     <Content Include="Providers\DataProviders\SqlDataProvider\BugNet.Data.SqlDataProvider.sql" />
     <Content Include="Providers\DataProviders\SqlDataProvider\BugNet.Schema.SqlDataProvider.sql" />
+    <Content Include="Providers\DataProviders\SqlDataProvider\1.6.330.0.SqlDataProvider.sql" />
     <Content Include="Providers\DataProviders\SqlDataProvider\Latest.SqlDataProvider.sql" />
     <Content Include="Scripts\attrchange.js" />
     <Content Include="Scripts\bootstrap-dialog.js" />
@@ -2263,6 +2264,7 @@
     <Content Include="App_GlobalResources\Exceptions.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Errors\App_LocalResources\Error.aspx.resx" />
     <Content Include="Errors\App_LocalResources\SessionExpired.aspx.resx" />
@@ -2433,7 +2435,9 @@
     <Content Include="Queries\App_LocalResources\QueryDetail.aspx.nl-NL.resx" />
     <Content Include="Queries\App_LocalResources\QueryList.aspx.nl-NL.resx" />
     <Content Include="UserControls\App_LocalResources\CategoryTreeView.ascx.nl-NL.resx" />
-    <Content Include="UserControls\App_LocalResources\DisplayIssues.ascx.nl-NL.resx" />
+    <Content Include="UserControls\App_LocalResources\DisplayIssues.ascx.nl-NL.resx">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="UserControls\App_LocalResources\PickCategory.ascx.nl-NL.resx" />
     <Content Include="UserControls\App_LocalResources\PickImage.ascx.nl-NL.resx" />
     <Content Include="UserControls\App_LocalResources\PickMilestone.ascx.nl-NL.resx" />

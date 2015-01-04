@@ -8,7 +8,8 @@ USING (VALUES
 	('ru-RU', 'Russian (Russia)', 'en-US'),
 	('ro-RO', 'Romanian (Romania)', 'en-US'),
 	('fr-CA', 'French (Canadian)', 'en-US'),
-	('de-DE', 'German (Germany)', 'en-US')
+	('de-DE', 'German (Germany)', 'en-US'),
+	('en-GB', 'English (United Kingdom)', 'en-US')
 ) 
 AS Source ([CultureCode], [CultureName], [FallbackCulture]) 
 ON Target.CultureCode = Source.CultureCode

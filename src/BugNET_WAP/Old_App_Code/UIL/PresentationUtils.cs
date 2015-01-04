@@ -112,7 +112,8 @@ namespace BugNET.UserInterfaceLayer
         /// </summary>
         /// <param name="email">The email id.</param>
         /// <param name="imgSize">Size of the img.</param>
-        /// <returns></returns>
+        /// <returns>The gravatar image URL</returns>
+        /// <remarks>Will throw a NullReferenceException if passes a null email</remarks>
         public static string GetGravatarImageUrl(string email, int imgSize)
         {
             // Convert emailID to lower-case

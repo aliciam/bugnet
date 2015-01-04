@@ -30,6 +30,7 @@ INSERT [BugNet_Permissions] ([PermissionId], [PermissionKey], [PermissionName]) 
 INSERT [BugNet_Permissions] ([PermissionId], [PermissionKey], [PermissionName]) VALUES (29, N'AdminDeleteProject', N'Delete a project')
 INSERT [BugNet_Permissions] ([PermissionId], [PermissionKey], [PermissionName]) VALUES (31, N'ChangeIssueStatus', N'Change an issues status field')
 INSERT [BugNet_Permissions] ([PermissionId], [PermissionKey], [PermissionName]) VALUES (32, N'EditQuery', N'Edit queries')
+INSERT [BugNet_Permissions] ([PermissionId], [PermissionKey], [PermissionName]) VALUES (33, N'ViewPrivateComment', N'View Private Comments')
 
 -- Host Settings 
 INSERT INTO [dbo].[BugNet_HostSettings] ([SettingName], [SettingValue]) VALUES (N'AdminNotificationUsername', N'admin')
@@ -130,6 +131,7 @@ INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCul
 INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCulture]) VALUES('fr-CA', 'French (Canadian)', 'en-US')
 INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCulture]) VALUES('de-DE', 'German (Germany)', 'en-US')
 INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCulture]) VALUES('zh-CN', 'Chinese (China)', 'en-US')
+INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCulture]) VALUES('en-GB', 'English (United Kingdom)', 'en-US')
 
 -- Roles and Permissions 
 PRINT 'Add Default Roles & Permissions'
