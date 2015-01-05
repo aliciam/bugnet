@@ -75,12 +75,12 @@
                         <div class="form-group">
                             <asp:Label ID="lblAvatar" CssClass="control-label col-md-2" AssociatedControlID="rblAvatar" runat="server" Text="<%$ Resources:SharedResources, Avatar %>" />
                             <div class="col-md-6">
-                                    <asp:RadioButtonList id="rblAvatar" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" CssClass="radio">
+                                    <asp:RadioButtonList id="rblAvatar" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" CssClass="radio radio-inline">
                                        <asp:ListItem Value="Gravatar" selected="true">Gravatar</asp:ListItem>
                                        <asp:ListItem Value="LocalAvatar">Use Local Image: 
                                        </asp:ListItem>
                                     </asp:RadioButtonList>
-                                    <asp:FileUpload ID="fupAvatar" runat="server" CssClass="btn btn-default" />
+                                    <asp:FileUpload ID="fupAvatar" runat="server" CssClass="btn btn-default" style="display:inline;" />
                             </div>
                             <div class="col-md-4">
                                 <asp:Image runat="server" ID="imgAvatar" Height="64" Width="64" />                     
