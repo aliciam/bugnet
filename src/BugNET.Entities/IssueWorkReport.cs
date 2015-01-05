@@ -16,6 +16,7 @@ namespace BugNET.Entities
         public IssueWorkReport()
         {
             CommentText = string.Empty;
+            CommentIsPrivate = false;
             CreatorUserName = string.Empty;
             WorkDate = DateTime.Now;
             CreatorDisplayName = string.Empty;
@@ -48,6 +49,12 @@ namespace BugNET.Entities
         /// </summary>
         /// <value>The comment text.</value>
         public string CommentText { get; set; }
+
+        /// <summary>
+        /// Gets the flag to say if the comment is of a private nature.
+        /// </summary>
+        /// <value>True if the comment is private, false otherwise.</value>
+        public bool CommentIsPrivate { get; set; }
 
         /// <summary>
         /// Gets the comment id.

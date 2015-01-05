@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using BugNET.Common;
 using BugNET.DAL;
 using BugNET.Entities;
@@ -96,6 +97,19 @@ namespace BugNET.BLL
         public static List<IssueComment> GetByIssueId(int issueId)
         {
             return DataProviderManager.Provider.GetIssueCommentsByIssueId(issueId);
+        }
+
+        /// <summary>
+        /// Gets all comments for a issue
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <param name="inclPrivateComments"></param>
+        /// <param name="username"></param>
+        /// <returns>List of Comment Objects</returns>
+        public static List<IssueComment> GetByIssueId(int issueId, bool inclPrivateComments, string username)
+        {
+            List<IssueComment> result = DataProviderManager.Provider.GetIssueCommentsByIssueId(issueId);
+            return inclPrivateComments ? result : result.Where(item => !item.CommentIsPrivate || item.CreatorUserName == username).ToList();
         }
 
         /// <summary>

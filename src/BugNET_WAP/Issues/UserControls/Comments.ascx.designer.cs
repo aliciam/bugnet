@@ -58,6 +58,15 @@ namespace BugNET.Issues.UserControls {
         protected global::BugNET.UserControls.HtmlEditor CommentHtmlEditor;
         
         /// <summary>
+        /// cbxPrivateComment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbxPrivateComment;
+        
+        /// <summary>
         /// Button1 control.
         /// </summary>
         /// <remarks>

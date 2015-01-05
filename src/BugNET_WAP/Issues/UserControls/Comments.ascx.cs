@@ -61,7 +61,9 @@ namespace BugNET.Issues.UserControls
         /// </summary>
         private void BindComments()
         {
-            IList comments = IssueCommentManager.GetByIssueId(IssueId);
+            bool canViewPrivateComments = Page.User.Identity.IsAuthenticated && UserManager.HasPermission(ProjectId, Common.Permission.ViewPrivateComment.ToString());
+            IList comments = IssueCommentManager.GetByIssueId(IssueId, canViewPrivateComments, Page.User.Identity.Name);
+            if (!canViewPrivateComments) cbxPrivateComment.Visible = false;
 
             if (comments.Count == 0)
             {
@@ -195,6 +197,8 @@ namespace BugNET.Issues.UserControls
 
                         comment = IssueCommentManager.GetById(Convert.ToInt32(commentId));
                         comment.Comment = editor.Text.Trim();
+                        comment.CommentIsPrivate =
+                            ((CheckBox) pnlEditComment.FindControl("cbxEditPrivateComment")).Checked;
                         IssueCommentManager.SaveOrUpdate(comment);
 
                         editor.Text = String.Empty;
@@ -229,6 +233,12 @@ namespace BugNET.Issues.UserControls
                     editor = pnlEditComment.FindControl("EditCommentHtmlEditor") as BugNET.UserControls.HtmlEditor;
                     if (editor != null) editor.Text = comment.Comment;
 
+                    //and check the Private Comment checkbox as needed
+                    CheckBox editPrivateCommentBox = ((CheckBox) pnlEditComment.FindControl("cbxEditPrivateComment"));
+                    editPrivateCommentBox.Checked = comment.CommentIsPrivate;
+                    editPrivateCommentBox.Visible = Page.User.Identity.IsAuthenticated && UserManager.HasPermission(ProjectId, Common.Permission.ViewPrivateComment.ToString());;
+
+
                     // Save the comment ID for further editting.
                     commentNumber = (HiddenField)e.Item.FindControl("commentNumber");
                     if (commentNumber != null) commentNumber.Value = (string)e.CommandArgument;
@@ -249,6 +259,7 @@ namespace BugNET.Issues.UserControls
                               {
                                   IssueId = IssueId,
                                   Comment = CommentHtmlEditor.Text.Trim(),
+                                  CommentIsPrivate = cbxPrivateComment.Checked,
                                   CreatorUserName = Security.GetUserName(),
                                   DateCreated = DateTime.Now
                               };

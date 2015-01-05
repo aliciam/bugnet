@@ -39,6 +39,7 @@
                 <asp:Label ID="lblEditComment" runat="server" meta:resourcekey="cmdEditComment">Edit Comment</asp:Label></h3>
             <bn:HtmlEditor ID="EditCommentHtmlEditor" Height="200" runat="server" />
             <asp:HiddenField runat="server" ID="commentNumber" Value="" />
+            <asp:CheckBox ID="cbxEditPrivateComment" Text="Private comment" runat="server"></asp:CheckBox>
             <div style="margin-top: 1.5em">
                 <asp:Button ID="cmdUpdateComment" CssClass="btn btn-primary" Text="<%$ Resources:SharedResources, Update %>" runat="server" CausesValidation="True" ValidationGroup="EditComment"
                     UseSubmitBehavior="false" CommandName="Save" />
@@ -92,6 +93,7 @@
     <h3>
         <asp:Literal ID="Literal1" runat="server" meta:resourcekey="LeaveComment" /></h3>
     <bn:HtmlEditor ID="CommentHtmlEditor" runat="server" />
+    <asp:CheckBox ID="cbxPrivateComment" Text="Private comment" runat="server" Checked="True"></asp:CheckBox>
     <div style="margin-top: 1.5em">
         <asp:Button Text="Add Comment" CausesValidation="false" CssClass="btn btn-primary" runat="server" ID="Button1" meta:resourcekey="cmdAddComment" ValidationGroup="AddComment"
             OnClick="CmdAddCommentClick" />

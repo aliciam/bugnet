@@ -2,7 +2,8 @@
 	@IssueCommentId int,
 	@IssueId int,
 	@CreatorUserName nvarchar(255),
-	@Comment ntext
+	@Comment ntext,
+	@CommentIsPrivate bit
 AS
 
 DECLARE @UserId uniqueidentifier
@@ -11,5 +12,6 @@ SELECT @UserId = UserId FROM Users WHERE UserName = @CreatorUserName
 UPDATE BugNet_IssueComments SET
 	IssueId = @IssueId,
 	UserId = @UserId,
-	Comment = @Comment
+	Comment = @Comment,
+	CommentIsPrivate = @CommentIsPrivate
 WHERE IssueCommentId= @IssueCommentId

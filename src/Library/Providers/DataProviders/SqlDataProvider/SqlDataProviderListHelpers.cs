@@ -84,6 +84,7 @@ namespace BugNET.Providers.DataProviders
                     {
                         Id = returnData.GetInt32(returnData.GetOrdinal("IssueCommentId")),
                         Comment = returnData.GetString(returnData.GetOrdinal("Comment")),
+                        CommentIsPrivate = returnData.GetBoolean(returnData.GetOrdinal("CommentIsPrivate")),
                         DateCreated = returnData.GetDateTime(returnData.GetOrdinal("DateCreated")),
                         CreatorDisplayName = returnData.GetString(returnData.GetOrdinal("CreatorDisplayName")),
                         CreatorUserName = returnData.GetString(returnData.GetOrdinal("CreatorUsername")),
@@ -707,6 +708,7 @@ namespace BugNET.Providers.DataProviders
                         Id = returnData.GetInt32(returnData.GetOrdinal("IssueWorkReportId")),
                         CommentId = returnData.GetInt32(returnData.GetOrdinal("IssueCommentId")),
                         CommentText = returnData.GetString(returnData.GetOrdinal("Comment")),
+                        CommentIsPrivate = returnData.GetBoolean(returnData.GetOrdinal("CommentIsPrivate")),
                         CreatorDisplayName = returnData.GetString(returnData.GetOrdinal("CreatorDisplayName")),
                         CreatorUserId = returnData.GetGuid(returnData.GetOrdinal("CreatorUserId")),
                         CreatorUserName = returnData.GetString(returnData.GetOrdinal("CreatorUserName")),

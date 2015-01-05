@@ -368,7 +368,7 @@ namespace BugNET.BLL
         {
             if (issueId <= Globals.NEW_ID) throw (new ArgumentOutOfRangeException("issueId"));
             if (newComment == null) throw new ArgumentNullException("newComment");
-
+ 
             // TODO - create this via dependency injection at some point.
             IMailDeliveryService mailService = new SmtpMailDeliveryService();
 
@@ -417,8 +417,12 @@ namespace BugNET.BLL
 
                     // skip to the next user if this user is not approved
                     if (!user.IsApproved) continue; 
-                    // skip to next user if this user doesn't have notifications enabled.
-                    if (!new WebProfile().GetProfile(user.UserName).ReceiveEmailNotifications) continue;
+                    // skip to next user if this user doesn't have notifications enabled, or if the comment is private and
+                    // they cannot view private comments.
+                    var webuser = new WebProfile().GetProfile(user.UserName);
+                    
+                    if (!webuser.ReceiveEmailNotifications ||
+                            (newComment.CommentIsPrivate && !UserManager.HasPermission(user.UserName, issue.ProjectId, Common.Permission.ViewPrivateComment.ToString()))) continue;
 
                     var message = new MailMessage
                         {

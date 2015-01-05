@@ -29,6 +29,7 @@ namespace BugNET.BLL
                     {
                         IssueId = entity.IssueId,
                         Comment = entity.CommentText,
+                        CommentIsPrivate = entity.CommentIsPrivate,
                         CreatorUserName = entity.CreatorUserName,
                         DateCreated = DateTime.Now
                     });
@@ -54,6 +55,28 @@ namespace BugNET.BLL
             if (issueId <= Globals.NEW_ID) throw (new ArgumentOutOfRangeException("issueId"));
 
             return DataProviderManager.Provider.GetIssueWorkReportsByIssueId(issueId);
+        }
+
+        /// <summary>
+        /// Gets all WorkReports for an issue
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <param name="inclPrivateComments"></param>
+        /// <param name="username"></param>
+        /// <returns>List of WorkReport Objects</returns>
+        public static List<IssueWorkReport> GetByIssueId(int issueId, bool inclPrivateComments, string username)
+        {
+            if (issueId <= Globals.NEW_ID) throw (new ArgumentOutOfRangeException("issueId"));
+
+            List<IssueWorkReport> result = DataProviderManager.Provider.GetIssueWorkReportsByIssueId(issueId);
+            if (!inclPrivateComments)
+            {
+                foreach (var item in result)
+                {
+                    if (item.CommentIsPrivate && !username.Equals(item.CreatorUserName)) item.CommentText = String.Empty;
+                }
+            }
+            return result;
         }
 
         /// <summary>

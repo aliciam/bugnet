@@ -87,7 +87,11 @@ namespace BugNET.Issues.UserControls
             TimeEntryDate.SelectedValue = DateTime.Today;
             cpTimeEntry.ValueToCompare = DateTime.Today.ToShortDateString();
 
-            var workReports = IssueWorkReportManager.GetByIssueId(IssueId);
+            //check users role permission for viewing private comments
+            bool canViewPrivateComments = Page.User.Identity.IsAuthenticated &&
+                UserManager.HasPermission(ProjectId, Common.Permission.ViewPrivateComment.ToString());
+
+            var workReports = IssueWorkReportManager.GetByIssueId(IssueId, canViewPrivateComments, Page.User.Identity.Name);
 
             if (workReports == null || workReports.Count == 0)
             {
@@ -125,7 +129,8 @@ namespace BugNET.Issues.UserControls
                                      CreatorUserName = Context.User.Identity.Name, 
                                      Duration = workDuration, 
                                      IssueId = IssueId, 
-                                     WorkDate = selectedWorkDate
+                                     WorkDate = selectedWorkDate,
+                                     CommentIsPrivate = cbxPrivateComment.Checked
                                  };
 
             IssueWorkReportManager.SaveOrUpdate(workReport);

@@ -58,6 +58,9 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-7">
+            <asp:CheckBox ID="cbxPrivateComment" Text="Private comment" runat="server" Checked="True"></asp:CheckBox>
+        </div>
+        <div class="col-md-offset-2 col-md-7">
             <asp:Button ID="AddTimeEntryButton" CssClass="btn btn-primary" runat="server" CausesValidation="true" ValidationGroup="AddTimeEntry" OnClick="AddTimeEntry_Click" meta:resourcekey="cmdAddTimeEntry" Text="Add Time Entry" />
         </div>
     </div>

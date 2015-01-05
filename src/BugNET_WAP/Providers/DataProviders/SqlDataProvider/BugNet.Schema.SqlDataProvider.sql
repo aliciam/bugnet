@@ -151,6 +151,7 @@ CREATE TABLE [dbo].[BugNet_IssueComments](
 	[IssueId] [int] NOT NULL,
 	[DateCreated] [datetime] NOT NULL,
 	[Comment] [nvarchar](max) NOT NULL,
+	[CommentIsPrivate] [bit] NOT NULL,
 	[UserId] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_BugNet_IssueComments] PRIMARY KEY CLUSTERED 
 (
@@ -973,7 +974,8 @@ AS
 SELECT     dbo.BugNet_IssueComments.IssueCommentId, dbo.BugNet_IssueComments.IssueId, dbo.BugNet_IssuesView.ProjectId, dbo.BugNet_IssueComments.Comment, 
                       dbo.BugNet_IssueComments.DateCreated, dbo.BugNet_UserView.UserId AS CreatorUserId, dbo.BugNet_UserView.DisplayName AS CreatorDisplayName, 
                       dbo.BugNet_UserView.UserName AS CreatorUserName, dbo.BugNet_IssuesView.Disabled AS IssueDisabled, dbo.BugNet_IssuesView.IsClosed AS IssueIsClosed, 
-                      dbo.BugNet_IssuesView.IssueVisibility, dbo.BugNet_IssuesView.ProjectCode, dbo.BugNet_IssuesView.ProjectName, dbo.BugNet_IssuesView.ProjectDisabled
+                      dbo.BugNet_IssuesView.IssueVisibility, dbo.BugNet_IssuesView.ProjectCode, dbo.BugNet_IssuesView.ProjectName, dbo.BugNet_IssuesView.ProjectDisabled,
+                      dbo.BugNet_IssueComments.CommentIsPrivate
 FROM         dbo.BugNet_IssuesView INNER JOIN
                       dbo.BugNet_IssueComments ON dbo.BugNet_IssuesView.IssueId = dbo.BugNet_IssueComments.IssueId INNER JOIN
                       dbo.BugNet_UserView ON dbo.BugNet_IssueComments.UserId = dbo.BugNet_UserView.UserId
@@ -1334,6 +1336,8 @@ ALTER TABLE [dbo].[BugNet_IssueAttachments] ADD  CONSTRAINT [DF_BugNet_IssueAtta
 GO
 ALTER TABLE [dbo].[BugNet_IssueComments] ADD  CONSTRAINT [DF_BugNet_IssueComments_DateCreated]  DEFAULT (getdate()) FOR [DateCreated]
 GO
+ALTER TABLE [dbo].[BugNet_IssueComments] ADD  CONSTRAINT [DF_BugNet_IssueComments_CommentIsPrivate]  DEFAULT ((0)) FOR [CommentIsPrivate]
+GO 
 ALTER TABLE [dbo].[BugNet_IssueHistory] ADD  CONSTRAINT [DF_BugNet_IssueHistory_DateCreated]  DEFAULT (getdate()) FOR [DateCreated]
 GO
 ALTER TABLE [dbo].[BugNet_Issues] ADD  CONSTRAINT [DF_BugNet_Issues_DueDate]  DEFAULT ('1/1/1900 12:00:00 AM') FOR [IssueDueDate]
@@ -2907,7 +2911,8 @@ GO
 CREATE PROCEDURE [dbo].[BugNet_IssueComment_CreateNewIssueComment]
 	@IssueId int,
 	@CreatorUserName NVarChar(255),
-	@Comment ntext
+	@Comment ntext,
+	@CommentIsPrivate bit
 AS
 -- Get Last Update UserID
 DECLARE @UserId uniqueidentifier
@@ -2917,14 +2922,16 @@ INSERT BugNet_IssueComments
 	IssueId,
 	UserId,
 	DateCreated,
-	Comment
+	Comment,
+	CommentIsPrivate
 ) 
 VALUES 
 (
 	@IssueId,
 	@UserId,
 	GetDate(),
-	@Comment
+	@Comment,
+	@CommentIsPrivate
 )
 
 /* Update the LastUpdate fields of this bug*/
@@ -2962,6 +2969,7 @@ SELECT
 	IssueCommentId,
 	IssueId,
 	Comment,
+	CommentIsPrivate,
 	U.UserId CreatorUserId,
 	U.UserName CreatorUserName,
 	IsNull(DisplayName,'') CreatorDisplayName,
@@ -2988,6 +2996,7 @@ SELECT
 	IssueCommentId,
 	IssueId,
 	Comment,
+	CommentIsPrivate,
 	U.UserId CreatorUserId,
 	U.UserName CreatorUserName,
 	IsNull(DisplayName,'') CreatorDisplayName,
@@ -3012,7 +3021,8 @@ CREATE PROCEDURE [dbo].[BugNet_IssueComment_UpdateIssueComment]
 	@IssueCommentId int,
 	@IssueId int,
 	@CreatorUserName nvarchar(255),
-	@Comment ntext
+	@Comment ntext,
+	@CommentIsPrivate bit
 AS
 
 DECLARE @UserId uniqueidentifier
@@ -3021,7 +3031,8 @@ SELECT @UserId = UserId FROM Users WHERE UserName = @CreatorUserName
 UPDATE BugNet_IssueComments SET
 	IssueId = @IssueId,
 	UserId = @UserId,
-	Comment = @Comment
+	Comment = @Comment,
+	CommentIsPrivate = @CommentIsPrivate
 WHERE IssueCommentId= @IssueCommentId
 
 
@@ -3406,7 +3417,8 @@ SELECT
 	BugNet_IssueWorkReports.UserId CreatorUserId, 
 	U.UserName CreatorUserName,
 	IsNull(DisplayName,'') CreatorDisplayName,
-    ISNULL(BugNet_IssueComments.Comment, '') Comment
+    ISNULL(BugNet_IssueComments.Comment, '') Comment,
+	ISNULL(BugNet_IssueComments.CommentIsPrivate, 1) CommentIsPrivate
 FROM         
 	BugNet_IssueWorkReports
 	INNER JOIN Users U ON BugNet_IssueWorkReports.UserId = U.UserId

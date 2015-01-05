@@ -1,29 +1,10 @@
-
-
-PRINT N'Add New Permission(s)'
-GO
-INSERT [BugNet_Permissions] ([PermissionId], [PermissionKey], [PermissionName]) VALUES (33, N'ViewPrivateComment', N'View Private Comments')
+INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCulture]) VALUES('en-GB', 'English (UK)', 'en-US')
 GO
 
-
-
-PRINT N'Add New Language(s)'
-GO
-INSERT INTO [dbo].[BugNet_Languages] ([CultureCode], [CultureName], [FallbackCulture]) VALUES('en-GB', 'English (United Kingdom)', 'en-US')
-GO
-
-
-
-PRINT N'Alter BugNet_IssueComments Table'
-GO
 ALTER TABLE BugNet_IssueComments
     ADD  [CommentIsPrivate] [bit] NOT NULL CONSTRAINT [DF_BugNet_IssueComments_CommentIsPrivate]  DEFAULT ((0))
 GO
 
-
-
-PRINT N'Alter [BugNet_IssueComment_GetIssueCommentsByIssueId] Procedure'
-GO
 ALTER PROCEDURE [dbo].[BugNet_IssueComment_GetIssueCommentsByIssueId]
 	@IssueId Int 
 AS
@@ -47,10 +28,6 @@ ORDER BY
 	DateCreated DESC
 GO
 
-
-
-PRINT N'Alter [BugNet_IssueWorkReport_GetIssueWorkReportsByIssueId] Procedure'
-GO
 ALTER PROCEDURE [dbo].[BugNet_IssueWorkReport_GetIssueWorkReportsByIssueId]
 	@IssueId INT
 AS
@@ -75,10 +52,6 @@ WHERE
 ORDER BY WorkDate DESC
 GO
 
-
-
-PRINT N'Alter [BugNet_IssueCommentsView] View'
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -96,10 +69,6 @@ FROM         dbo.BugNet_IssuesView INNER JOIN
 
 GO
 
-
-
-PRINT N'Alter [BugNet_IssueComment_GetIssueCommentById] Procedure'
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -125,9 +94,6 @@ WHERE
 GO
 
 
-
-PRINT N'Alter [BugNet_IssueComment_UpdateIssueComment] Procedure'
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -152,9 +118,6 @@ WHERE IssueCommentId= @IssueCommentId
 GO
 
 
-
-PRINT N'Alter [BugNet_IssueWorkReport_GetIssueWorkReportsByIssueId] Procedure'
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -184,9 +147,6 @@ ORDER BY WorkDate DESC
 GO
 
 
-
-PRINT N'Alter [BugNet_IssueComment_GetIssueCommentById] Procedure'
-GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -213,8 +173,6 @@ GO
 
 
 
-PRINT N'Alter [BugNet_IssueComment_CreateNewIssueComment] Procedure'
-GO
 ALTER PROCEDURE [dbo].[BugNet_IssueComment_CreateNewIssueComment]
 	@IssueId int,
 	@CreatorUserName NVarChar(255),
@@ -245,7 +203,3 @@ VALUES
 UPDATE BugNet_Issues SET LastUpdate = GetDate(),LastUpdateUserId = @UserId WHERE IssueId = @IssueId
 
 RETURN scope_identity()
-GO
-
-
-

@@ -17,6 +17,7 @@ namespace BugNET.Entities
         {
             CreatorUserName = string.Empty;
             Comment = string.Empty;
+            CommentIsPrivate = false;
             CreatorDisplayName = string.Empty;
             DateCreated = DateTime.Now;
         }
@@ -51,6 +52,12 @@ namespace BugNET.Entities
         /// </summary>
         /// <value>The comment.</value>
         public string Comment { get; set; }
+
+        /// <summary>
+        /// Gets the flag to say if the comment is of a private nature.
+        /// </summary>
+        /// <value>True if the comment is private, false otherwise.</value>
+        public bool CommentIsPrivate { get; set; }
 
         public string CommentForXml
         {

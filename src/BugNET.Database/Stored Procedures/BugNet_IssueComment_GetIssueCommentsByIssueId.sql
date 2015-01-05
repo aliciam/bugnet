@@ -6,6 +6,7 @@ SELECT
 	IssueCommentId,
 	IssueId,
 	Comment,
+	CommentIsPrivate,
 	U.UserId CreatorUserId,
 	U.UserName CreatorUserName,
 	IsNull(DisplayName,'') CreatorDisplayName,

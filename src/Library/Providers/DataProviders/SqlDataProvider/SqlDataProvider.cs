@@ -207,6 +207,7 @@ namespace BugNET.Providers.DataProviders
                 AddParamToSqlCmd(sqlCmd, "@IssueId", SqlDbType.Int, 0, ParameterDirection.Input, newComment.IssueId);
                 AddParamToSqlCmd(sqlCmd, "@CreatorUserName", SqlDbType.NVarChar, 255, ParameterDirection.Input, newComment.CreatorUserName);
                 AddParamToSqlCmd(sqlCmd, "@Comment", SqlDbType.NText, 0, ParameterDirection.Input, newComment.Comment);
+                AddParamToSqlCmd(sqlCmd, "@CommentIsPrivate", SqlDbType.Bit, 0, ParameterDirection.Input, newComment.CommentIsPrivate);
 
                 SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_ISSUECOMMENT_CREATE);
                 ExecuteScalarCmd(sqlCmd);
@@ -289,6 +290,7 @@ namespace BugNET.Providers.DataProviders
                     AddParamToSqlCmd(sqlCmd, "@IssueId", SqlDbType.Int, 0, ParameterDirection.Input, issueCommentToUpdate.IssueId);
                     AddParamToSqlCmd(sqlCmd, "@CreatorUserName", SqlDbType.NVarChar, 255, ParameterDirection.Input, issueCommentToUpdate.CreatorUserName);
                     AddParamToSqlCmd(sqlCmd, "@Comment", SqlDbType.NText, 0, ParameterDirection.Input, issueCommentToUpdate.Comment);
+                    AddParamToSqlCmd(sqlCmd, "@CommentIsPrivate", SqlDbType.Bit, 0, ParameterDirection.Input, issueCommentToUpdate.CommentIsPrivate);
 
                     SetCommandType(sqlCmd, CommandType.StoredProcedure, SP_ISSUECOMMENT_UPDATE);
                     ExecuteScalarCmd(sqlCmd);

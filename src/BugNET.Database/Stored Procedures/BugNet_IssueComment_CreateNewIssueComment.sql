@@ -1,7 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[BugNet_IssueComment_CreateNewIssueComment]
 	@IssueId int,
 	@CreatorUserName NVarChar(255),
-	@Comment ntext
+	@Comment ntext,
+	@CommentIsPrivate bit
 AS
 -- Get Last Update UserID
 DECLARE @UserId uniqueidentifier
@@ -11,14 +12,16 @@ INSERT BugNet_IssueComments
 	IssueId,
 	UserId,
 	DateCreated,
-	Comment
+	Comment,
+	CommentIsPrivate
 ) 
 VALUES 
 (
 	@IssueId,
 	@UserId,
 	GetDate(),
-	@Comment
+	@Comment,
+	@CommentIsPrivate
 )
 
 /* Update the LastUpdate fields of this bug*/

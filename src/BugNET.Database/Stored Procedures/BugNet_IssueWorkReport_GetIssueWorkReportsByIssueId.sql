@@ -10,7 +10,8 @@ SELECT
 	BugNet_IssueWorkReports.UserId CreatorUserId, 
 	U.UserName CreatorUserName,
 	IsNull(DisplayName,'') CreatorDisplayName,
-    ISNULL(BugNet_IssueComments.Comment, '') Comment
+    ISNULL(BugNet_IssueComments.Comment, '') Comment,
+	ISNULL(BugNet_IssueComments.CommentIsPrivate, 0) CommentIsPrivate
 FROM         
 	BugNet_IssueWorkReports
 	INNER JOIN Users U ON BugNet_IssueWorkReports.UserId = U.UserId
