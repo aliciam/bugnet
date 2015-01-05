@@ -2765,6 +2765,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Images\Users\" />
     <Folder Include="Scripts\ckeditor\plugins\a11yhelp\lang\" />
     <Folder Include="Scripts\ckeditor\plugins\specialchar\lang\" />
   </ItemGroup>
