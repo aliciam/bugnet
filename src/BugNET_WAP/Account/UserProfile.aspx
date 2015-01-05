@@ -1,5 +1,7 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UserProfile.aspx.cs" MasterPageFile="~/Site.master"
     Title="User Profile" Inherits="BugNET.Account.UserProfile" meta:resourcekey="Page" %>
+<%@ Import Namespace="BugNET.BLL" %>
+<%@ Import Namespace="BugNET.Common" %>
 
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="MainContent">
     <div class="page-header">
@@ -68,6 +70,20 @@
                                     Text="<%$ Resources:SharedResources, Required %>" ControlToValidate="Email" />
                                 <asp:RegularExpressionValidator ID="regexEmailValid" runat="server" ValidationExpression="\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
                                     ControlToValidate="Email" ErrorMessage="Invalid Email Format" Text="Invalid Email Format" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <asp:Label ID="lblAvatar" CssClass="control-label col-md-2" AssociatedControlID="rblAvatar" runat="server" Text="<%$ Resources:SharedResources, Avatar %>" />
+                            <div class="col-md-6">
+                                    <asp:RadioButtonList id="rblAvatar" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" CssClass="radio">
+                                       <asp:ListItem Value="Gravatar" selected="true">Gravatar</asp:ListItem>
+                                       <asp:ListItem Value="LocalAvatar">Use Local Image: 
+                                       </asp:ListItem>
+                                    </asp:RadioButtonList>
+                                    <asp:FileUpload ID="fupAvatar" runat="server" CssClass="btn btn-default" />
+                            </div>
+                            <div class="col-md-4">
+                                <asp:Image runat="server" ID="imgAvatar" Height="64" Width="64" />                     
                             </div>
                         </div>
                         <div class="form-group">

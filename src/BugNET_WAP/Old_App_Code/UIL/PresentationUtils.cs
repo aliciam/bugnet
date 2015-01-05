@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using BugNET.BLL;
 using BugNET.Common;
 using System.Diagnostics;
 using System.Security.Cryptography;
@@ -108,13 +111,34 @@ namespace BugNET.UserInterfaceLayer
         }
 
         /// <summary>
+        /// Gets the local, or gravatar, profile image url.
+        /// </summary>
+        /// <param name="username">The username the avatar is for.</param>
+        /// <param name="email">The email address of the user the avatar is for. Can be null.</param>
+        /// <param name="imgSize">The size of the image. Local sizes expect 32 or 64 (pixels).</param>
+        /// <returns>A url to the avatar, or to a default noprofile image if not found.</returns>
+        public static string GetAvatarImageUrl(string username, string email, int imgSize)
+        {
+            string url = "/images/noprofile.png";
+
+            if (imgSize != 32 && imgSize != 64) imgSize = 64;
+            
+            string imagePath = "/Images/Users/" + username + imgSize + ".jpg";
+
+            if (File.Exists(HttpContext.Current.Server.MapPath(imagePath))) url = imagePath;
+            else if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true) && email != null) url = PresentationUtils.GetGravatarImageUrl(email, imgSize);                              
+        
+            return url;
+        }
+
+        /// <summary>
         /// Gets the gravatar image URL.
         /// </summary>
         /// <param name="email">The email id.</param>
         /// <param name="imgSize">Size of the img.</param>
         /// <returns>The gravatar image URL</returns>
-        /// <remarks>Will throw a NullReferenceException if passes a null email</remarks>
-        public static string GetGravatarImageUrl(string email, int imgSize)
+        /// <remarks>Will throw a NullReferenceException if passed a null email</remarks>
+        private static string GetGravatarImageUrl(string email, int imgSize)
         {
             // Convert emailID to lower-case
             email = email.Trim().ToLower();

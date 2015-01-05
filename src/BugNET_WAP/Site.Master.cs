@@ -80,15 +80,14 @@ namespace BugNET
             var oHelper = new SuckerFishMenuHelper(ProjectId);
             litMenu.Text = oHelper.GetHtml();
 
-            if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true))
+
+            var user = Membership.GetUser(Security.GetUserName());
+            if (user != null)
             {
-                var user = Membership.GetUser(Security.GetUserName());
-                if (user != null && user.Email != null)
-                {
-                    Image img =  (System.Web.UI.WebControls.Image)LoginView1.FindControl("Avatar");
-                    img.ImageUrl = PresentationUtils.GetGravatarImageUrl(user.Email, 32);
-                }
+                Image img =  (System.Web.UI.WebControls.Image)LoginView1.FindControl("Avatar");
+                img.ImageUrl = PresentationUtils.GetAvatarImageUrl(user.UserName, user.Email, 32);
             }
+
 
             ProjectsList.DataTextField = "Name";
             ProjectsList.DataValueField = "Id";

@@ -1,6 +1,10 @@
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI.WebControls;
@@ -8,7 +12,9 @@ using BugNET.BLL;
 using BugNET.Common;
 using BugNET.Entities;
 using BugNET.UserInterfaceLayer;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using log4net;
+using Image = System.Drawing.Image;
 
 namespace BugNET.Account
 {
@@ -53,6 +59,20 @@ namespace BugNET.Account
 
             UserName.Text = membershipUser.UserName;
             Email.Text = membershipUser.Email;
+
+            if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true))
+            {
+                if (File.Exists(Server.MapPath("~/Images/Users/" + membershipUser.UserName + "64.jpg")))
+                {
+                    rblAvatar.SelectedValue = "LocalAvatar";
+                }
+            }
+            else
+            {
+                lblAvatar.AssociatedControlID = "fupAvatar";
+                rblAvatar.Visible = false;
+            }
+            imgAvatar.ImageUrl = PresentationUtils.GetAvatarImageUrl(membershipUser.UserName, membershipUser.Email, 64);
 
             var isFromOpenIdRegistration = Request.Get("oid", false);
 
@@ -163,6 +183,14 @@ namespace BugNET.Account
             WebProfile.Current.LastName = LastName.Text;
             WebProfile.Current.DisplayName = FullName.Text;
 
+            if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true) && rblAvatar.SelectedValue == "Gravatar") DisableAnyLocalAvatarImages(membershipUser.UserName);
+            else if (!UploadLocalAvatarImage(fupAvatar, membershipUser.UserName)) {
+                EnableAnyLocalAvatarImages(membershipUser.UserName);
+                if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true)) MakeDummyAvatar(membershipUser.UserName);
+            }
+
+            imgAvatar.ImageUrl = PresentationUtils.GetAvatarImageUrl(membershipUser.UserName, membershipUser.Email, 64);
+
             try
             {
                 WebProfile.Current.Save();
@@ -191,6 +219,7 @@ namespace BugNET.Account
 
 
         }
+
 
         /// <summary>
         /// Handles the Click event of the BackButton control.
@@ -241,6 +270,71 @@ namespace BugNET.Account
 
             }
 
+        }
+
+        /// <summary>
+        /// Uploads the profile image and saves two versions in the images/users folder:
+        ///  one as 64x64 pixels called [username]64.jpg
+        ///  other as 32x32 pixels called [username]32.jpg
+        /// </summary>
+        /// <param name="fup">The file image to upload.</param>
+        /// <param name="userName">The username of the user.</param>
+        /// <returns>True if a file was successfully uploaded, false otherwise.</returns>
+        private bool UploadLocalAvatarImage(FileUpload fup, string userName)
+        {
+            bool imageUploaded = false;
+            string[] allowedFileTypes = {".jpg",".jpeg", ".gif", ".png"};
+            if (fup.HasFile && fup.PostedFile.ContentLength > 0 && allowedFileTypes.Any(allowedFileType => allowedFileType == Path.GetExtension(fup.PostedFile.FileName)))
+            {
+                //CreateAvatarImages(fup.PostedFile, userName);
+                var fileSize = fup.PostedFile.ContentLength;
+                var fileBytes = new byte[fileSize];
+                var myStream = fup.PostedFile.InputStream;
+                myStream.Read(fileBytes, 0, fileSize);
+                System.Drawing.Image image = System.Drawing.Image.FromStream(myStream);
+                SaveImage(image, userName, 32);
+                SaveImage(image, userName, 64);
+                imageUploaded = true;
+            }
+            return imageUploaded;
+        }
+
+        private void SaveImage(Image image, string userName, int size, bool overwrite = true)
+        {
+            var newImage = (System.Drawing.Image)(new Bitmap(image, new Size(size, size)));
+            string filePath = Server.MapPath("~/Images/Users/" + userName + size + ".jpg");
+            if (File.Exists((filePath)))
+            {
+                if (overwrite)
+                {
+                    File.Delete(filePath);
+                    newImage.Save(filePath, ImageFormat.Jpeg);
+                }
+            } else newImage.Save(filePath, ImageFormat.Jpeg);
+        }
+
+        private void DisableAnyLocalAvatarImages(string userName)
+        {
+            RenameImage(Server.MapPath("~/Images/Users/" + userName + "64.jpg"), Server.MapPath("~/Images/Users/disabled_" + userName + "64.jpg"));
+            RenameImage(Server.MapPath("~/Images/Users/" + userName + "32.jpg"), Server.MapPath("~/Images/Users/disabled_" + userName + "32.jpg"));
+        }
+        private void EnableAnyLocalAvatarImages(string userName)
+        {
+            RenameImage(Server.MapPath("~/Images/Users/disabled_" + userName + "64.jpg"), Server.MapPath("~/Images/Users/" + userName + "64.jpg"));
+            RenameImage(Server.MapPath("~/Images/Users/disabled_" + userName + "32.jpg"), Server.MapPath("~/Images/Users/" + userName + "32.jpg"));
+        }
+
+        private void RenameImage(string oldPath, string newPath)
+        {
+            if (File.Exists(oldPath)) System.IO.File.Move(oldPath, newPath);
+        }
+
+
+        private void MakeDummyAvatar(string userName)
+        {
+            var image = Image.FromFile(Server.MapPath("~/images/noprofile.png"));
+            SaveImage(image, userName, 32, false);
+            SaveImage(image, userName, 64, false);            
         }
     }
 }

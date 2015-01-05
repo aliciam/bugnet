@@ -120,12 +120,9 @@ namespace BugNET.Issues.UserControls
 
 
             var avatar = (Image)e.Item.FindControl("Avatar");
+            var user = Membership.GetUser(currentComment.CreatorUserName);
+            if(user != null) avatar.Attributes.Add("src", PresentationUtils.GetAvatarImageUrl(user.UserName, user.Email, 64));
 
-            if (HostSettingManager.Get(HostSettingNames.EnableGravatar, true))
-            {
-                var user = Membership.GetUser(currentComment.CreatorUserName);
-                if (user != null && user.Email != null) avatar.Attributes.Add("src", PresentationUtils.GetGravatarImageUrl(user.Email, 64));
-            }
 
             var hlPermaLink = (HyperLink)e.Item.FindControl("hlPermalink");
             hlPermaLink.NavigateUrl = String.Format("{0}#{1}", HttpContext.Current.Request.Url, currentComment.Id);
