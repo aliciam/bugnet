@@ -189,4 +189,22 @@
   <data name="SecurityQuestionChanged" xml:space="preserve">
     <value>Security question was changed successfully.</value>
   </data>
+  <data name="IssueAddedToProject.Text" xml:space="preserve">
+    <value>an issue is added to a project I am monitoring</value>
+  </data>
+  <data name="IssueAnyOtherColumnChanged.Text" xml:space="preserve">
+    <value>any other column of an issue has changed</value>
+  </data>
+  <data name="IssueAssignedToMe.Text" xml:space="preserve">
+    <value>an issue is assigned to me</value>
+  </data>
+  <data name="IssueCommentAdded.Text" xml:space="preserve">
+    <value>an issue has a new comment</value>
+  </data>
+  <data name="IssueNotificationsForWhichChanges.Text" xml:space="preserve">
+    <value>Recieve Notifications When</value>
+  </data>
+  <data name="IssueStatusChanged.Text" xml:space="preserve">
+    <value>an issue's status is changed</value>
+  </data>
 </root>

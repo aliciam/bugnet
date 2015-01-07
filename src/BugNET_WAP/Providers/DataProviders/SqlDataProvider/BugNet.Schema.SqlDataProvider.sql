@@ -695,6 +695,7 @@ CREATE TABLE [dbo].[BugNet_UserProfiles](
 	[ReceiveEmailNotifications] [bit] NOT NULL CONSTRAINT [DF_BugNet_UserProfiles_RecieveEmailNotifications]  DEFAULT ((1)),
 	[PasswordVerificationToken] [nvarchar](128) NULL,
 	[PasswordVerificationTokenExpirationDate] [datetime] NULL,
+	[NotificationOfChanges] [nvarchar](255) NOT NULL CONSTRAINT [DF_BugNet_UserProfiles_NotificationOfChanges]  DEFAULT ('1 2 3 4 5') 
  CONSTRAINT [PK_BugNet_UserProfiles] PRIMARY KEY CLUSTERED 
 (
 	[UserName] ASC

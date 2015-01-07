@@ -391,6 +391,60 @@ namespace BugNET.Account {
         protected global::System.Web.UI.WebControls.CheckBox AllowNotifications;
         
         /// <summary>
+        /// litNotificationIssueChanges control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litNotificationIssueChanges;
+        
+        /// <summary>
+        /// chkIssueAssignedToMe control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIssueAssignedToMe;
+        
+        /// <summary>
+        /// chkIssueAddedToProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIssueAddedToProject;
+        
+        /// <summary>
+        /// chkIssueStatusChanged control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIssueStatusChanged;
+        
+        /// <summary>
+        /// chkIssueAnyOtherColumnChanged control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIssueAnyOtherColumnChanged;
+        
+        /// <summary>
+        /// chkIssueCommentAdded control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkIssueCommentAdded;
+        
+        /// <summary>
         /// Literal4 control.
         /// </summary>
         /// <remarks>

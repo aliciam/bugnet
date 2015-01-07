@@ -148,34 +148,48 @@
                                 </div>
                             </div>
                         </div>
-
-                        <asp:Literal ID="Literal4" runat="server" Text="[Resource Needed]" meta:resourceKey="ReceiveProjectNotifications" />
+                        <div>
+                            <fieldset>
+                                <legend><asp:Literal ID="litNotificationIssueChanges" runat="Server" Text="[Resource Needed]" meta:resourceKey="IssueNotificationsForWhichChanges" ></asp:Literal></legend>
+                                <ul class="preferences">
+                                    <li><asp:CheckBox ID="chkIssueAssignedToMe" Text="[Resource Needed]" meta:resourceKey="IssueAssignedToMe" runat="server" /></li>
+                                    <li><asp:CheckBox ID="chkIssueAddedToProject" Text="[Resource Needed]" meta:resourceKey="IssueAddedToProject" runat="server" /></li>
+                                    <li><asp:CheckBox ID="chkIssueStatusChanged" Text="[Resource Needed]" meta:resourceKey="IssueStatusChanged" runat="server" /></li>
+                                    <li><asp:CheckBox ID="chkIssueAnyOtherColumnChanged" Text="[Resource Needed]" meta:resourceKey="IssueAnyOtherColumnChanged" runat="server" /></li>
+                                    <li><asp:CheckBox ID="chkIssueCommentAdded" Text="[Resource Needed]" meta:resourceKey="IssueCommentAdded" runat="server" /></li>
+                                </ul>
+                            </fieldset>
+                        </div>
                         <br />
-                        <br />
-                        <div class="form-group">
-                            <div class="col-md-5">
-                                <strong><asp:Literal ID="Literal5" runat="server" Text="[Resource Needed]" meta:resourceKey="AllProjects" /></strong>
-                                <asp:ListBox ID="lstAllProjects" SelectionMode="Multiple" runat="Server" CssClass="form-control"
-                                    Height="150px" />
-                            </div>
+                        <div>
+                            <fieldset> 
+                                <legend><asp:Literal ID="Literal4" runat="server" Text="[Resource Needed]" meta:resourceKey="ReceiveProjectNotifications" /></legend>
+                                <div class="form-group">
+                                    <div class="col-md-5">
+                                        <strong><asp:Literal ID="Literal5" runat="server" Text="[Resource Needed]" meta:resourceKey="AllProjects" /></strong>
+                                        <asp:ListBox ID="lstAllProjects" SelectionMode="Multiple" runat="Server" CssClass="form-control"
+                                            Height="150px" />
+                                    </div>
 
-                            <div class="col-md-2 text-center" style="padding-top: 50px;">
-                                <button ID="Button1" type="button" class="btn btn-default" onserverclick="AddProjectNotification" runat="server">
-                                     <span class="glyphicon glyphicon-chevron-right"></span>
-                                </button>
+                                    <div class="col-md-2 text-center" style="padding-top: 50px;">
+                                        <button ID="Button1" type="button" class="btn btn-default" onserverclick="AddProjectNotification" runat="server">
+                                             <span class="glyphicon glyphicon-chevron-right"></span>
+                                        </button>
                                 
-                                <br /><br />
+                                        <br /><br />
                                 
-                                <button ID="Button2" type="button" class="btn btn-default" onserverclick="RemoveProjectNotification" runat="server">
-                                     <span class="glyphicon glyphicon-chevron-left"></span>
-                                </button>
-                            </div>
+                                        <button ID="Button2" type="button" class="btn btn-default" onserverclick="RemoveProjectNotification" runat="server">
+                                             <span class="glyphicon glyphicon-chevron-left"></span>
+                                        </button>
+                                    </div>
 
-                            <div class="col-md-5">
-                               <strong><asp:Literal ID="Literal6" runat="server" Text="[Resource Needed]" meta:resourceKey="SelectedProjects" /></strong>
-                                <asp:ListBox ID="lstSelectedProjects" SelectionMode="Multiple" runat="Server" CssClass="form-control"
-                                    Height="150px" />
-                           </div>
+                                    <div class="col-md-5">
+                                       <strong><asp:Literal ID="Literal6" runat="server" Text="[Resource Needed]" meta:resourceKey="SelectedProjects" /></strong>
+                                        <asp:ListBox ID="lstSelectedProjects" SelectionMode="Multiple" runat="Server" CssClass="form-control"
+                                            Height="150px" />
+                                   </div>
+                                </div>
+                            </fieldset>   
                         </div>
                         <div class="form-group">
                             <div class="col-md-6">

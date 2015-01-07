@@ -121,7 +121,19 @@ namespace BugNET.BLL
                 SetPropertyValue("PasswordVerificationTokenExpirationDate", value);
             }
         }
-        
+
+        public virtual string NotificationOfChanges
+        {
+            get
+            {
+                return ((string)(GetPropertyValue("NotificationOfChanges")));
+            }
+            set
+            {
+                SetPropertyValue("NotificationOfChanges", value);
+            }
+        }    
+   
         public static WebProfile Current {
             get {
                 return new WebProfile(System.Web.HttpContext.Current.Profile);

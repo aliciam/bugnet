@@ -406,6 +406,7 @@ namespace BugNET.Issues
                 {
                     var notify = new IssueNotification { IssueId = issue.Id, NotificationUsername = oUser.UserName };
                     IssueNotificationManager.SaveOrUpdate(notify);
+                    IssueNotificationManager.SendNewAssigneeNotification(notify);
                 }
             }
 

@@ -67,7 +67,7 @@ input[type="select"] {
     margin-left: 0;
 
 }
-.checkbox{
+.checkbox {
     height: 34px;
     line-height: 1.42857143;
     display:block;
@@ -286,6 +286,21 @@ ul.permissions {
     }
 
     ul.permissions > li > input[type="checkbox"] {
+        margin: 6px 10px 7px 0;
+    }
+
+ul.preferences {
+    list-style: none;
+    float: left;
+}
+
+    ul.preferences li {
+        display: inline;
+        float: left;
+        width: 320px;
+    }
+
+    ul.preferences > li > input[type="checkbox"] {
         margin: 6px 10px 7px 0;
     }
 

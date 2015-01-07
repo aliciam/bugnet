@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Security;
+using System.Web.UI.MobileControls;
 using System.Web.UI.WebControls;
 using BugNET.BLL;
 using BugNET.Common;
@@ -55,6 +58,13 @@ namespace BugNET.Account
             IssueListItems.SelectedValue = UserManager.GetProfilePageSize().ToString();
             AllowNotifications.Checked = WebProfile.Current.ReceiveEmailNotifications;
 
+            int[] notificationsAccepted = Array.ConvertAll(WebProfile.Current.NotificationOfChanges.Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries), int.Parse);
+            chkIssueAssignedToMe.Checked = notificationsAccepted.Any(n => n == (int)NotificationOfChange.IssueAssignedToReceiver);
+            chkIssueAddedToProject.Checked = notificationsAccepted.Any(n => n == (int)NotificationOfChange.IssueAddedToMonitoredProject);
+            chkIssueStatusChanged.Checked = notificationsAccepted.Any(n => n == (int)NotificationOfChange.IssueStatusChanged);
+            chkIssueAnyOtherColumnChanged.Checked = notificationsAccepted.Any(n => n == (int)NotificationOfChange.IssueOtherColumnChanged);
+            chkIssueCommentAdded.Checked = notificationsAccepted.Any(n => n == (int)NotificationOfChange.IssueCommentAdded);
+
             if (membershipUser == null) return;
 
             UserName.Text = membershipUser.UserName;
@@ -81,6 +91,7 @@ namespace BugNET.Account
                 Message1.ShowInfoMessage(GetLocalResourceObject("UpdateProfileForOpenId").ToString());
             }
         }
+
 
         /// <summary>
         /// Adds the user.
@@ -191,6 +202,8 @@ namespace BugNET.Account
 
             imgAvatar.ImageUrl = PresentationUtils.GetAvatarImageUrl(membershipUser.UserName, membershipUser.Email, 64);
 
+
+
             try
             {
                 WebProfile.Current.Save();
@@ -245,6 +258,14 @@ namespace BugNET.Account
             WebProfile.Current.IssuesPageSize = Convert.ToInt32(IssueListItems.SelectedValue);
             WebProfile.Current.PreferredLocale = ddlPreferredLocale.SelectedValue;
             WebProfile.Current.ReceiveEmailNotifications = AllowNotifications.Checked;
+
+            var selectedNotifications = new List<int>();
+            if (chkIssueAssignedToMe.Checked)  selectedNotifications.Add((int)NotificationOfChange.IssueAssignedToReceiver);
+            if (chkIssueAddedToProject.Checked)  selectedNotifications.Add((int)NotificationOfChange.IssueAddedToMonitoredProject);
+            if (chkIssueStatusChanged.Checked)  selectedNotifications.Add((int)NotificationOfChange.IssueStatusChanged);
+            if (chkIssueAnyOtherColumnChanged.Checked)  selectedNotifications.Add((int)NotificationOfChange.IssueOtherColumnChanged);
+            if (chkIssueCommentAdded.Checked) selectedNotifications.Add((int)NotificationOfChange.IssueCommentAdded);
+            WebProfile.Current.NotificationOfChanges = String.Join(" ", selectedNotifications);
 
             try
             {

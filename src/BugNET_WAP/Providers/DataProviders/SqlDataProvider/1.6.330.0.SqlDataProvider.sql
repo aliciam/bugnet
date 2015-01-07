@@ -247,5 +247,9 @@ UPDATE BugNet_Issues SET LastUpdate = GetDate(),LastUpdateUserId = @UserId WHERE
 RETURN scope_identity()
 GO
 
-
+PRINT N'Alter BugNet_UserProfiles Table'
+GO
+ ALTER TABLE BugNet_UserProfiles
+    ADD  [NotificationOfChanges] nvarchar(255) NOT NULL CONSTRAINT [DF_BugNet_UserProfiles_NotificationOfChanges]  DEFAULT ('1 2 3 4 5') 
+GO
 

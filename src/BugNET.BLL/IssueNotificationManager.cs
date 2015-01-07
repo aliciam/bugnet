@@ -59,6 +59,7 @@ namespace BugNET.BLL
         /// Sends an email to all users that are subscribed to a issue
         /// </summary>
         /// <param name="issueId">The issue id.</param>
+        [Obsolete("SendIssueNotifications(int) is deprecated, please use SendIssueNotifications(int,IEnumerable<IssueHistory>) instead.", true)]
         public static void SendIssueNotifications(int issueId)
         {
             if (issueId <= Globals.NEW_ID) throw (new ArgumentOutOfRangeException("issueId"));
@@ -174,9 +175,14 @@ namespace BugNET.BLL
                     var user = UserManager.GetUser(notification.NotificationUsername);
 
                     // skip to the next user if this user is not approved
-                    if (!user.IsApproved) continue; 
+                    if (!user.IsApproved) continue;
+
+                    var profile = new WebProfile().GetProfile(user.UserName);
                     // skip to next user if this user doesn't have notifications enabled.
-                    if (!new WebProfile().GetProfile(user.UserName).ReceiveEmailNotifications) continue;
+                    if (!profile.ReceiveEmailNotifications) continue;
+                    // skip to the next user if this user does not wish to receive notification for every issue added to a project
+                    if (profile.NotificationOfChanges.Split().All(i => Convert.ToInt32(i) != (int) NotificationOfChange.IssueAddedToMonitoredProject)) continue;
+                    
 
                     var nc = templateCache.First(p => p.CultureString == notification.NotificationCulture);
 
@@ -227,11 +233,12 @@ namespace BugNET.BLL
             var data = new Dictionary<string, object> {{"Issue", issue}};
 
             var writer = new System.IO.StringWriter();
+            var issueHistories = issueChanges as IssueHistory[] ?? issueChanges.ToArray();
             using (System.Xml.XmlWriter xml = new System.Xml.XmlTextWriter(writer))
             {
                 xml.WriteStartElement("IssueHistoryChanges");
 
-                foreach (var issueHistory in issueChanges)
+                foreach (var issueHistory in issueHistories)
                 {
                     IssueHistoryManager.SaveOrUpdate(issueHistory);
                     xml.WriteRaw(issueHistory.ToXml());
@@ -270,9 +277,17 @@ namespace BugNET.BLL
                     var user = UserManager.GetUser(notification.NotificationUsername);
 
                     // skip to the next user if this user is not approved
-                    if (!user.IsApproved) continue; 
+                    if (!user.IsApproved) continue;
+
+                    var profile = new WebProfile().GetProfile(user.UserName);
                     // skip to next user if this user doesn't have notifications enabled.
-                    if (!new WebProfile().GetProfile(user.UserName).ReceiveEmailNotifications) continue;
+                    if (!profile.ReceiveEmailNotifications) continue;
+                    // skip to the next user if the changes are of no interest to this user
+                    bool changeIsOfInterest = false;
+                    int[] notificationPrefs = Array.ConvertAll(profile.NotificationOfChanges.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse);
+                    if (issueHistories.Any(h => h.FieldChanged == "Status") && notificationPrefs.Any(i => i == (int)NotificationOfChange.IssueStatusChanged)) changeIsOfInterest = true;
+                    if (issueHistories.Any(h => h.FieldChanged != "Status") && notificationPrefs.Any(i => i == (int)NotificationOfChange.IssueOtherColumnChanged)) changeIsOfInterest = true;
+                    if (!changeIsOfInterest) continue;
 
                     var nc = templateCache.First(p => p.CultureString == notification.NotificationCulture);
 
@@ -330,11 +345,15 @@ namespace BugNET.BLL
 
                 var user = UserManager.GetUser(notification.NotificationUsername);
 
-                // skip to the next user if this user is not approved
+                // skip if this user is not approved
                 if (!user.IsApproved) return; 
-                // skip to next user if this user doesn't have notifications enabled.
-                if (!new WebProfile().GetProfile(user.UserName).ReceiveEmailNotifications)
-                    return;
+
+                var profile = new WebProfile().GetProfile(user.UserName);
+                // skip if user doesn't have notifications enabled.
+                if (!profile.ReceiveEmailNotifications) return;
+                // skip if this user does not wish to receive notification when assigned to an issue
+                if (profile.NotificationOfChanges.Split().All(i => Convert.ToInt32(i) != (int)NotificationOfChange.IssueAssignedToReceiver)) return;
+                    
 
                 var emailSubject = nc.CultureContents
                     .First(p => p.ContentKey == subjectKey)
@@ -417,12 +436,14 @@ namespace BugNET.BLL
 
                     // skip to the next user if this user is not approved
                     if (!user.IsApproved) continue; 
-                    // skip to next user if this user doesn't have notifications enabled, or if the comment is private and
-                    // they cannot view private comments.
-                    var webuser = new WebProfile().GetProfile(user.UserName);
                     
-                    if (!webuser.ReceiveEmailNotifications ||
-                            (newComment.CommentIsPrivate && !UserManager.HasPermission(user.UserName, issue.ProjectId, Common.Permission.ViewPrivateComment.ToString()))) continue;
+                    var profile = new WebProfile().GetProfile(user.UserName);
+                    // skip to next user if this user doesn't have notifications enabled
+                    if (!profile.ReceiveEmailNotifications) continue;
+                    // skip to the next user if this user does not wish to receive notification of comments added.
+                    if (profile.NotificationOfChanges.Split().All(i => Convert.ToInt32(i) != (int)NotificationOfChange.IssueCommentAdded)) continue;                   
+                    // skip to next user if the comment is private and the user cannot view private comments.
+                    if(newComment.CommentIsPrivate && !UserManager.HasPermission(user.UserName, issue.ProjectId, Common.Permission.ViewPrivateComment.ToString())) continue;
 
                     var message = new MailMessage
                         {

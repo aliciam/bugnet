@@ -98,4 +98,13 @@ namespace BugNET.Common
         EditQuery = 32,
         ViewPrivateComment = 33
     }
+
+    public enum NotificationOfChange
+    {
+        IssueAssignedToReceiver = 1,
+        IssueAddedToMonitoredProject = 2,
+        IssueStatusChanged = 3,
+        IssueCommentAdded = 4,
+        IssueOtherColumnChanged = 5
+    }
 }
