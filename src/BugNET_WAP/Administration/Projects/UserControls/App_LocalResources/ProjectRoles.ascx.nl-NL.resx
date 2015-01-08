@@ -312,7 +312,7 @@
   <data name="DescriptionLabel.Text" xml:space="preserve">
     <value>Ieder project heeft zijn eigen rollen om gebruikers en rechten te groeperen. Bij het aanmaken van een nieuw project worden er al een aantal standaard rollen aangemaakt. Als u een aangepaste rol nodig heeft klik dan op de knop "Nieuwe rol toevoegen" en wijs de gewenste rechten toe.</value>
   </data>
-  <data name="ViewPrivateComments" xml:space="preserve">
-    <value>Opmerkingen bekijken is gemarkeerd als privé</value>
+  <data name="ViewPrivateComments.Text" xml:space="preserve">
+    <value>Privé opmerkingen bekijken</value>
   </data>
 </root>

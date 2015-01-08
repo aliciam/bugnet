@@ -94,7 +94,7 @@
                 <li>
                     <asp:CheckBox ID="chkEditOwnComment" Text="Edit own comments" meta:resourcekey="EditOwnComments" runat="server"></asp:CheckBox></li>
                 <li>
-                    <asp:CheckBox ID="chkViewPrivateComment" Text="View private comments" runat="server"></asp:CheckBox></li>
+                    <asp:CheckBox ID="chkViewPrivateComment" Text="View private comments" meta:resourcekey="ViewPrivateComments" runat="server"></asp:CheckBox></li>
                 <li>
                     <asp:CheckBox ID="chkAddAttachment" Text="Add attachments" meta:resourcekey="AddAttachments" runat="server"></asp:CheckBox></li>
                 <li>
