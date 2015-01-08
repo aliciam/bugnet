@@ -8,6 +8,8 @@ using BugNET.BLL;
 using BugNET.Common;
 using BugNET.Entities;
 using BugNET.UserInterfaceLayer;
+using DotNetOpenAuth.Messaging;
+using Microsoft.Ajax.Utilities;
 
 namespace BugNET.Issues
 {
@@ -233,7 +235,34 @@ namespace BugNET.Issues
 
             }
 
-            if (ViewIssuesDropDownFilter.SelectedValue == "Monitored")
+            if (ViewIssuesDropDownFilter.SelectedValue == "All")
+            {
+                var projects = PresentationUtils.GetSelectedItemsIntegerList(ProjectListBoxFilter, false).Where(project => project > Globals.NEW_ID).ToList();
+
+                ctlDisplayIssues.RssUrl = string.Format("~/Feed.aspx?channel=7&ou={0}&ec={1}", Security.GetUserName(), ExcludeClosedIssuesFilter.Checked);
+                object userId = UserManager.GetUser(Security.GetUserName()).ProviderUserKey;
+                
+                //first get all the issues that user is monitoring (has notifications set for)
+                List<Issue> allRelevantIssues = IssueManager.GetMonitoredIssuesByUserName(userId, sortColumns, projects, ExcludeClosedIssuesFilter.Checked);
+                
+                //then add all issues Assigned, Owned or Created by the User
+                if (ExcludeClosedIssuesFilter.Checked)
+                {
+                    queryClauses.Add(new QueryClause("AND", "iv.[IsClosed]", "=", "0", SqlDbType.Int));
+                }
+                queryClauses.Add(new QueryClause("AND (", "iv.[IssueAssignedUserId]", "=", user.ProviderUserKey.ToString(), SqlDbType.NVarChar));
+                queryClauses.Add(new QueryClause("OR", "iv.[IssueOwnerUserId]", "=", user.ProviderUserKey.ToString(), SqlDbType.NVarChar));
+                queryClauses.Add(new QueryClause("OR", "iv.[IssueCreatorUserId]", "=", user.ProviderUserKey.ToString(), SqlDbType.NVarChar));
+                queryClauses.Add(new QueryClause(")", "", "", "", SqlDbType.NVarChar));
+
+                allRelevantIssues.AddRange(IssueManager.PerformQuery(queryClauses, sortColumns));
+
+                //TODO: find the right way to do this. This is obviously not it! (Tried overriding 'Equals' in Issue entity, but I think
+                //Distinct says it uses the 'default' Equals operator... whatever that is!
+                ctlDisplayIssues.DataSource = allRelevantIssues.Distinct().ToList();
+                ctlDisplayIssues.DataBind();                
+            }
+            else if (ViewIssuesDropDownFilter.SelectedValue == "Monitored")
             {
                 var projects = PresentationUtils.GetSelectedItemsIntegerList(ProjectListBoxFilter, false).Where(project => project > Globals.NEW_ID).ToList();
 

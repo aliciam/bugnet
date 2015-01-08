@@ -79,9 +79,9 @@
                         </div>
                         <div>
                             <asp:DropDownList ID="ViewIssuesDropDownFilter" CssClass="form-control" AutoPostBack="True" runat="Server" OnSelectedIndexChanged="MyIssuesFilterChanged">
-                                <asp:ListItem Text="-- Select a View --" Value="" meta:resourceKey="ViewIssuesDropDownFilter_Select" />
+                                <asp:ListItem Text="Select All" Value="All" Selected="True" />
                                 <%--<asp:ListItem Text="Relevant to You" Value="Relevant" meta:resourcekey="ViewIssuesDropDownFilter_Relevant" />--%>
-                                <asp:ListItem Text="Assigned to You" Value="Assigned" Selected="True" meta:resourceKey="ViewIssuesDropDownFilter_Assigned" />
+                                <asp:ListItem Text="Assigned to You" Value="Assigned" meta:resourceKey="ViewIssuesDropDownFilter_Assigned" />
                                 <asp:ListItem Text="Created by You" Value="Created" meta:resourceKey="ViewIssuesDropDownFilter_Created" />
                                 <asp:ListItem Text="Owned by You" Value="Owned" meta:resourceKey="ViewIssuesDropDownFilter_Owned" />
                                 <asp:ListItem Text="Monitored by You" Value="Monitored" meta:resourceKey="ViewIssuesDropDownFilter_Monitored" />
