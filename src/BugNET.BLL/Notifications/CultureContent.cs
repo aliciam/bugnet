@@ -65,28 +65,29 @@ namespace BugNET.BLL.Notifications
         /// </summary>
         /// <param name="source">The anonymous object containing the data to be inserted into the string.format call</param>
         /// <returns>The formatted string with parameter values inserted at the specified places.</returns>
+        /// <remarks>Based on code by James  http://james.newtonking.com/archive/2008/03/29/formatwith-2-0-string-formatting-with-named-variables </remarks>
         public string FormatContentWith(object source)
         {
             if (source == null) return Content;
 
-            var r = new Regex(@"(?<start>\{)+(?<property>[\w\.\[\]]+)(?<format>:[^}]+)?(?<end>\})+",
-              RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-
-
             var values = new List<object>();
 
-            string rewrittenFormat = r.Replace(Content, delegate(Match m)
-            {
-                Group startGroup = m.Groups["start"];
-                Group propertyGroup = m.Groups["property"];
-                Group formatGroup = m.Groups["format"];
-                Group endGroup = m.Groups["end"];
+            //note: faster to use the static method than instantiate a Regex like in the original solution by James
+            string rewrittenFormat = Regex.Replace(Content,
+                @"(?<start>\{)+(?<property>[\w\.\[\]]+)(?<format>:[^}]+)?(?<end>\})+",
+                delegate(Match m)
+                {
+                    Group startGroup = m.Groups["start"];
+                    Group propertyGroup = m.Groups["property"];
+                    Group formatGroup = m.Groups["format"];
+                    Group endGroup = m.Groups["end"];
 
-                values.Add((propertyGroup.Value == "0")? source: DataBinder.Eval(source, propertyGroup.Value));
+                    values.Add((propertyGroup.Value == "0")? source: DataBinder.Eval(source, propertyGroup.Value));
 
-                return new string('{', startGroup.Captures.Count) + (values.Count - 1) + formatGroup.Value
-                  + new string('}', endGroup.Captures.Count);
-            });
+                    return new string('{', startGroup.Captures.Count) + (values.Count - 1) + formatGroup.Value
+                      + new string('}', endGroup.Captures.Count);
+                },
+                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
             SetCultureThread();
             var content = string.Format(rewrittenFormat, values.ToArray());
