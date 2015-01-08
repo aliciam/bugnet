@@ -681,10 +681,12 @@ namespace BugNET.BLL
             if (issue.Visibility == IssueVisibility.Private.To<int>() && !UserManager.IsInRole(issue.ProjectId, Globals.ProjectAdminRole))
             {
                 // if the current user is either the assigned / creator / owner then they can see the private issue
+                List<IssueNotification> notifications = IssueNotificationManager.GetByIssueId(issue.Id);
                 return (
                     issue.AssignedUserName.Trim().Equals(requestingUserName.Trim()) ||
                     issue.CreatorUserName.Trim().Equals(requestingUserName.Trim()) ||
-                    issue.OwnerUserName.Trim().Equals(requestingUserName.Trim())
+                    issue.OwnerUserName.Trim().Equals(requestingUserName.Trim()) ||
+                    notifications.Exists(n => n.NotificationUsername.Trim().Equals(requestingUserName.Trim()))
                 );
             }
 
