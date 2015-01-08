@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
+using System.Web.UI.WebControls;
 using BugNET.BLL.Notifications;
 using BugNET.Common;
 using BugNET.DAL;
@@ -233,7 +234,12 @@ namespace BugNET.BLL
             var data = new Dictionary<string, object> {{"Issue", issue}};
 
             var writer = new System.IO.StringWriter();
+
             var issueHistories = issueChanges as IssueHistory[] ?? issueChanges.ToArray();
+
+            var fieldPriorityOrder = new string[] { "Title", "Status", "Resolution", "Priority", "Description" }; //and the rest don't matter
+            var priorityHistory = GetPriorityHistory(issueHistories, fieldPriorityOrder);
+
             using (System.Xml.XmlWriter xml = new System.Xml.XmlTextWriter(writer))
             {
                 xml.WriteStartElement("IssueHistoryChanges");
@@ -250,9 +256,14 @@ namespace BugNET.BLL
             }
 
             var templateCache = new List<CultureNotificationContent>();
+
+            IssueHistory statusChange = issueHistories.FirstOrDefault(h => h.FieldChanged == "Status");
+            bool statusChanged = statusChange != null;
+            string subjectKey = "IssueUpdatedSubject";
+
             var emailFormatKey = (emailFormatType == EmailFormatType.Text) ? "" : "HTML";
-            const string subjectKey = "IssueUpdatedSubject";
             var bodyKey = string.Concat("IssueUpdatedWithChanges", emailFormatKey);
+
 
             // get a list of distinct cultures
             var distinctCultures = (from c in issNotifications
@@ -285,15 +296,25 @@ namespace BugNET.BLL
                     // skip to the next user if the changes are of no interest to this user
                     bool changeIsOfInterest = false;
                     int[] notificationPrefs = Array.ConvertAll(profile.NotificationOfChanges.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries), int.Parse);
-                    if (issueHistories.Any(h => h.FieldChanged == "Status") && notificationPrefs.Any(i => i == (int)NotificationOfChange.IssueStatusChanged)) changeIsOfInterest = true;
+                    if (statusChanged && notificationPrefs.Any(i => i == (int)NotificationOfChange.IssueStatusChanged)) changeIsOfInterest = true;
                     if (issueHistories.Any(h => h.FieldChanged != "Status") && notificationPrefs.Any(i => i == (int)NotificationOfChange.IssueOtherColumnChanged)) changeIsOfInterest = true;
                     if (!changeIsOfInterest) continue;
 
                     var nc = templateCache.First(p => p.CultureString == notification.NotificationCulture);
 
+                    var subjectData = new
+                        {
+                            IssueId = issue.FullId,
+                            IssueTitle = issue.Title,
+                            DisplayName = displayname,
+                            FieldName = priorityHistory.FieldChanged,
+                            NewValue = priorityHistory.NewValue,
+                            OldValue = priorityHistory.OldValue
+                        };
+
                     var emailSubject = nc.CultureContents
                         .First(p => p.ContentKey == subjectKey)
-                        .FormatContent(issue.FullId, displayname);
+                        .FormatContentWith(subjectData);
 
                     var bodyContent = nc.CultureContents
                         .First(p => p.ContentKey == bodyKey)
@@ -314,6 +335,7 @@ namespace BugNET.BLL
                 }
             }
         }
+
 
         /// <summary>
         /// Sends an email to the user that is assigned to the issue
@@ -460,6 +482,25 @@ namespace BugNET.BLL
                 }
             }
         }
+
+
+        /// <summary>
+        /// Gets the IssueHistory in the list with the highest priority field name (as per the passed in list), or the first one
+        /// if no field names appear in the priority list.
+        /// </summary>
+        /// <param name="issueChanges">The non-null list of IssueHistory changes</param>
+        /// <param name="fieldPriorityOrder">An list of fieldnames in order of decreasing priority.</param>
+        /// <returns>The highest priority IssueHistory change.</returns>
+        private static IssueHistory GetPriorityHistory(IssueHistory[] issueChanges, IEnumerable<string> fieldPriorityOrder)
+        {
+            foreach (string fieldname in fieldPriorityOrder)
+            {
+                var issueChange = issueChanges.FirstOrDefault(change => change.FieldChanged == fieldname);
+                if (issueChange != null) return issueChange;
+            }
+            return issueChanges.First();
+        }
+
 
         /// <summary>
         /// Processes the exception by logging and throwing a wrapper exception with non-sensitive data.

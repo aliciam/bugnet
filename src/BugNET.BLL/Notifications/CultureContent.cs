@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web.UI;
 
 namespace BugNET.BLL.Notifications
 {
@@ -55,6 +58,43 @@ namespace BugNET.BLL.Notifications
 
             return content;
         }
+
+
+        /// <summary>
+        /// Used when culture content is in the string.format format, except with named (rather than numbered) parameters
+        /// </summary>
+        /// <param name="source">The anonymous object containing the data to be inserted into the string.format call</param>
+        /// <returns>The formatted string with parameter values inserted at the specified places.</returns>
+        public string FormatContentWith(object source)
+        {
+            if (source == null) return Content;
+
+            var r = new Regex(@"(?<start>\{)+(?<property>[\w\.\[\]]+)(?<format>:[^}]+)?(?<end>\})+",
+              RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
+
+            var values = new List<object>();
+
+            string rewrittenFormat = r.Replace(Content, delegate(Match m)
+            {
+                Group startGroup = m.Groups["start"];
+                Group propertyGroup = m.Groups["property"];
+                Group formatGroup = m.Groups["format"];
+                Group endGroup = m.Groups["end"];
+
+                values.Add((propertyGroup.Value == "0")? source: DataBinder.Eval(source, propertyGroup.Value));
+
+                return new string('{', startGroup.Captures.Count) + (values.Count - 1) + formatGroup.Value
+                  + new string('}', endGroup.Captures.Count);
+            });
+
+            SetCultureThread();
+            var content = string.Format(rewrittenFormat, values.ToArray());
+            ResetCultureThread();
+
+            return content;
+        }
+
 
         private void SetCultureThread()
         {
