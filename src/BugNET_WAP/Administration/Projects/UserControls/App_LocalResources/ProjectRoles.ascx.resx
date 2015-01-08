@@ -315,7 +315,7 @@
   <data name="IssueTracking.Text" xml:space="preserve">
     <value>Issue Tracking</value>
   </data>
-  <data name="ViewPrivateComments" xml:space="preserve">
+  <data name="ViewPrivateComments.Text" xml:space="preserve">
     <value>View Private Comments</value>
   </data>
 </root>
